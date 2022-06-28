@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Copyright (C) 2022 VYAGOO TECHNOLOGY Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,19 +11,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//build/config/clang/clang.gni")
+import("//build/ohos.gni")
+import("//build/ohos/kernel/kernel.gni")
+
+ic_name="t507"
+arch_version="arm64"
+root_path=rebase_path("$root_build_dir/../..")
+kernel_source_dir = "//kernel/linux/$linux_kernel_version"
 
 
-module_path=${1}
-ko_file_name=${2}
+action("kernel") {
+  script = "make_kernel.sh"
+  sources = [ kernel_source_dir ]
+  outputs = [ "$root_build_dir/build_kernel.tamp" ]
+  args = [
+    ic_name,
+    linux_kernel_version,
+    arch_version,
+    root_path,
+  ]
+}
 
-if [ ! -d "" ]; then
-	mkdir -p ${module_path}
-fi
 
-cd ${module_path}
-
-if [ ! -f "${ko_file_name}" ] ;then
-	touch ${ko_file_name}
-fi
-
-cd -
